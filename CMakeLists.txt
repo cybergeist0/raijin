@@ -35,4 +35,5 @@ pico_sdk_init()
 
 add_subdirectory(displaylib_16bit_PICO/library displaylib)
 
+add_subdirectory(graphing)
 add_subdirectory(starfield)
