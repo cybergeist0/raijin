@@ -3,6 +3,7 @@ project(game1 C CXX ASM)
 add_executable(game1 
         main.cpp
         sprite.cpp
+        collider.cpp
 )
 
 pico_set_program_name(game1 "game1")

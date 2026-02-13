@@ -2,19 +2,30 @@
 #include "displaylib_16/ili9341.hpp"
 
 Sprite::Sprite(const uint8_t* bitmap, int w, int h, uint16_t transparentColor)
-    : bitmap_data(bitmap), width(w), height(h), x_pos(0), y_pos(0), transparent_color(transparentColor) {}
+    : bitmap_data(bitmap), width(w), height(h), transparent_color(transparentColor) {
+    position = new Vector2D<int>(0, 0);
+    collider = new SquareCollider(position, width, height);
+}
+
+Sprite::~Sprite() {
+    delete collider;
+    delete position;
+}
 
 void Sprite::setPosition(int x, int y) {
-    x_pos = x;
-    y_pos = y;
+    position->setX(x);
+    position->setY(y);
 }
 
 void Sprite::move(int dx, int dy) {
-    x_pos += dx;
-    y_pos += dy;
+    position->setX(position->getX() + dx);
+    position->setY(position->getY() + dy);
 }
 
 void Sprite::draw(ILI9341_TFT& display) {
+    int x_pos = position->getX();
+    int y_pos = position->getY();
+    
     for (int y = 0; y < height; y++) {
         for (int x = 0; x < width; x++) {
             int index = (y * width + x) * 2;
@@ -28,6 +39,8 @@ void Sprite::draw(ILI9341_TFT& display) {
 }
 
 void Sprite::drawScaled(ILI9341_TFT& display, float scale) {
+    int x_pos = position->getX();
+    int y_pos = position->getY();
     int new_width = (int)(width * scale);
     int new_height = (int)(height * scale);
     
@@ -46,8 +59,5 @@ void Sprite::drawScaled(ILI9341_TFT& display, float scale) {
 }
 
 bool Sprite::collidesWith(const Sprite& other) const {
-    return x_pos < other.x_pos + other.width &&
-           x_pos + width > other.x_pos &&
-           y_pos < other.y_pos + other.height &&
-           y_pos + height > other.y_pos;
+    return collider->collidesWith(*other.collider);
 }
