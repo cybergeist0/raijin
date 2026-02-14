@@ -7,6 +7,7 @@ add_executable(game1
         screen.cpp
         xpt2046.c
         audio_channel.cpp
+        game.cpp
 )
 
 add_executable(touch_test
